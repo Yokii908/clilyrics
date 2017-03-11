@@ -1,5 +1,5 @@
 # clilyrics
-Command line interface to get lyrics of a song on your terminal
+Command line interface to get lyrics of a song on your terminal using Genius API.
 
 ## Usage
-`./get_lyrics.py Song Artist`
+`python3 get_lyrics.py Song Artist`
