@@ -2,4 +2,4 @@
 Command line interface to get lyrics of a song on your terminal
 
 ## Usage
-`python3 get_lyrics.py Song Artist`
+`./get_lyrics.py Song Artist`
