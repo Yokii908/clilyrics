@@ -5,13 +5,22 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
-with open('config.json') as json_data_file:
-    data = json.load(json_data_file)
-a = data["token"]
 
-base_url = "http://api.genius.com"
-headers = {'Authorization': a}
+def get_config(config_file='config.json'):
+    """Docstring for get_config.
 
+    :config_file: configuration file
+    :returns: token
+
+    """
+    with open(config_file) as json_data_file:
+        data = json.load(json_data_file)
+    a = data.get("token")
+    return a
+
+
+BASE_URL = "http://api.genius.com"
+HEADERS = {'Authorization': get_config()}
 SONG_TITLE = 0
 ARTIST_NAME = 0
 
@@ -30,9 +39,9 @@ def check_args():
 
 
 def get_song_id_from_name():
-    search_url = base_url + "/search"
+    search_url = BASE_URL + "/search"
     data = {'q': SONG_TITLE + '+' + ARTIST_NAME}
-    response = requests.get(search_url, params=data, headers=headers)
+    response = requests.get(search_url, params=data, headers=HEADERS)
     json = response.json()
     artist = ARTIST_NAME.upper()
     if response.status_code != 200:
@@ -44,8 +53,8 @@ def get_song_id_from_name():
 
 
 def get_web_path_from_song_id(song_id):
-    search_url = base_url + "/songs/" + str(song_id)
-    response = requests.get(search_url, headers=headers)
+    search_url = BASE_URL + "/songs/" + str(song_id)
+    response = requests.get(search_url, headers=HEADERS)
     if response.status_code != 200:
         sys.exit("Combination Song/Artist not found")
     json = response.json()
