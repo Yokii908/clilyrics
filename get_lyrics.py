@@ -22,15 +22,15 @@ def get_config(config_file='config.json'):
 
 BASE_URL = "http://api.genius.com"
 HEADERS = {'Authorization': get_config()}
-SONG_TITLE = 0
-ARTIST_NAME = 0
+
 
 def check_args():
-	parser = argparse.ArgumentParser()
-	parser.add_argument("song")
-	parser.add_argument("artist")
-	args = parser.parse_args()
-	return args.song, args.artist
+    parser = argparse.ArgumentParser()
+    parser.add_argument("song")
+    parser.add_argument("artist")
+    args = parser.parse_args()
+    return args.song, args.artist
+
 
 def get_song_id_from_name(song_name, artist_name):
     search_url = BASE_URL + "/search"
