@@ -16,6 +16,10 @@ def check_args():
     global SONG_TITLE
     global ARTIST_NAME
     if len(sys.argv) != 3:
+        print("Error: Missing arguments",
+                file=sys.stderr)
+        print(sys.argv[0], "song artist",
+                file=sys.stderr)
         sys.exit(1)
     SONG_TITLE = sys.argv[1]
     ARTIST_NAME = sys.argv[2]
