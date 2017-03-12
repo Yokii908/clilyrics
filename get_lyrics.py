@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 # coding: utf-8
+import json
 import sys
 import requests
 from bs4 import BeautifulSoup
 
+with open('config.json') as json_data_file:
+    data = json.load(json_data_file)
+a = data["token"]
+
 base_url = "http://api.genius.com"
-a = "Bearer ggtZ3yMZlWxVXnwMZyRzDhtLLWpLX39bxMdrccRhrEfZLkRaCpcCdtxmGR1GnjN7"
 headers = {'Authorization': a}
 
 SONG_TITLE = 0
