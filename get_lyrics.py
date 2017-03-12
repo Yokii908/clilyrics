@@ -5,8 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 
 base_url = "http://api.genius.com"
-headers = {
-        'Authorization': 'Bearer ggtZ3yMZlWxVXnwMZyRzDhtLLWpLX39bxMdrccRhrEfZLkRaCpcCdtxmGR1GnjN7'}
+a = "Bearer ggtZ3yMZlWxVXnwMZyRzDhtLLWpLX39bxMdrccRhrEfZLkRaCpcCdtxmGR1GnjN7"
+headers = {'Authorization': a}
 
 SONG_TITLE = 0
 ARTIST_NAME = 0
@@ -18,17 +18,19 @@ def check_args():
     if len(sys.argv) != 3:
         sys.exit(1)
     SONG_TITLE = sys.argv[1]
-    ARTIST_NAME = sys.argv[2].upper()
+    ARTIST_NAME = sys.argv[2]
 
 
 def get_song_id_from_name():
     search_url = base_url + "/search"
-    data = {'q': SONG_TITLE}
+    data = {'q': SONG_TITLE + '+' + ARTIST_NAME}
     response = requests.get(search_url, params=data, headers=headers)
     json = response.json()
-
-    for res in json["response"]["hits"]:  # Caca
-        if res["result"]["primary_artist"]["name"].upper() == ARTIST_NAME:
+    artist = ARTIST_NAME.upper()
+    if response.status_code != 200:
+        sys.exit("An error occured. (Is your token valid ?)")
+    for res in json["response"]["hits"]:
+        if res["result"]["primary_artist"]["name"].upper() == artist:
             return res["result"]["id"]
     return 0
 
@@ -37,8 +39,7 @@ def get_web_path_from_song_id(song_id):
     search_url = base_url + "/songs/" + str(song_id)
     response = requests.get(search_url, headers=headers)
     if response.status_code != 200:
-        print("Combination Song/Artist not found")
-        sys.exit(2)
+        sys.exit("Combination Song/Artist not found")
     json = response.json()
     return json["response"]["song"]["path"]
 
@@ -54,14 +55,10 @@ def get_lyrics_from_path(path):
 
 def main():
     check_args()
-    # Tres caca.
-    print(
-            get_lyrics_from_path(
-                get_web_path_from_song_id(
-                    get_song_id_from_name()
-                    )
-                )
-            )
+    song_id = get_song_id_from_name()
+    web_path = get_web_path_from_song_id(song_id)
+    lyrics = get_lyrics_from_path(web_path)
+    print(lyrics)
 
 
 if __name__ == "__main__":
