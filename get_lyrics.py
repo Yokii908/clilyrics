@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
+import argparse
 import json
 import sys
 import requests
@@ -24,26 +25,19 @@ HEADERS = {'Authorization': get_config()}
 SONG_TITLE = 0
 ARTIST_NAME = 0
 
-
 def check_args():
-    global SONG_TITLE
-    global ARTIST_NAME
-    if len(sys.argv) != 3:
-        print("Error: Missing arguments",
-                file=sys.stderr)
-        print(sys.argv[0], "song artist",
-                file=sys.stderr)
-        sys.exit(1)
-    SONG_TITLE = sys.argv[1]
-    ARTIST_NAME = sys.argv[2]
+	parser = argparse.ArgumentParser()
+	parser.add_argument("song")
+	parser.add_argument("artist")
+	args = parser.parse_args()
+	return args.song, args.artist
 
-
-def get_song_id_from_name():
+def get_song_id_from_name(song_name, artist_name):
     search_url = BASE_URL + "/search"
-    data = {'q': SONG_TITLE + '+' + ARTIST_NAME}
+    data = {'q': song_name + '+' + artist_name}
     response = requests.get(search_url, params=data, headers=HEADERS)
     json = response.json()
-    artist = ARTIST_NAME.upper()
+    artist = artist_name.upper()
     if response.status_code != 200:
         sys.exit("An error occured. (Is your token valid ?)")
     for res in json["response"]["hits"]:
@@ -71,8 +65,8 @@ def get_lyrics_from_path(path):
 
 
 def main():
-    check_args()
-    song_id = get_song_id_from_name()
+    song_name, artist_name = check_args()
+    song_id = get_song_id_from_name(song_name, artist_name)
     web_path = get_web_path_from_song_id(song_id)
     lyrics = get_lyrics_from_path(web_path)
     print(lyrics)
