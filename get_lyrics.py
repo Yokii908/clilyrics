@@ -60,7 +60,7 @@ def get_lyrics_from_path(path):
     response = requests.get(url)
     bs = BeautifulSoup(response.text, "html.parser")
     [h.extract() for h in bs('script')]
-    lyrics = bs.find("lyrics").get_text()
+    lyrics = bs.find("div", class_="lyrics").get_text()
     return lyrics
 
 
